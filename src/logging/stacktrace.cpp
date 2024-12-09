@@ -81,12 +81,17 @@ static void exit_with_default_sighandler(const SignalType fatal_signal_id) {
                   << std::flush;
     }
 
-    //::kill(::getpid(), fatal_signal_id);
-    if (fatal_signal_id == SIGABRT) {
-        std::_Exit(fatal_signal_id);
-    } else {
-        std::exit(fatal_signal_id);
+    // Use std::raise to send the signal to the current process
+    if (std::raise(fatal_signal_id) != 0) {
+        std::cerr << "\n"
+                  << __FUNCTION__ << ":" << __LINE__
+                  << ". Failed to raise signal, trying kill() "
+                  << fatal_signal_id << "   \n\n"
+                  << std::flush;
     }
+
+    // Fallback in case std::raise doesn't terminate the process
+    ::kill(::getpid(), fatal_signal_id);
 }
 
 /** \return signal_name Ref: signum.hpp and \ref installSignalHandler

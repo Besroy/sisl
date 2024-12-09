@@ -43,6 +43,9 @@ GrpcServer::GrpcServer(const std::string& listen_addr, uint32_t threads, int max
 
     if (max_receive_msg_size != 0) { m_builder.SetMaxReceiveMessageSize(max_receive_msg_size); }
 
+    m_builder.SetMaxReceiveMessageSize(INT_MAX);
+    m_builder.SetMaxSendMessageSize(INT_MAX);
+
     if (!ssl_cert.empty() && !ssl_key.empty()) {
         std::string key_contents;
         std::string cert_contents;

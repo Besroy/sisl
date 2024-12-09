@@ -34,7 +34,8 @@ GrpcBaseClient::GrpcBaseClient(const std::string& server_addr,
 void GrpcBaseClient::init() {
     ::grpc::SslCredentialsOptions ssl_opts;
     ::grpc::ChannelArguments channel_args;
-    channel_args.SetMaxReceiveMessageSize(-1);
+    channel_args.SetMaxReceiveMessageSize(INT_MAX);
+    channel_args.SetMaxSendMessageSize(INT_MAX);
     if (!m_ssl_cert.empty()) {
         if (load_ssl_cert(m_ssl_cert, ssl_opts.pem_root_certs)) {
             if (!m_target_domain.empty()) { channel_args.SetSslTargetNameOverride(m_target_domain); }
